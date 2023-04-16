@@ -1,21 +1,21 @@
 #include <gtest/gtest.h>
-#include "PNCalculator.hpp"
+#include "Calculator.hpp"
 
-class PNCalculatorSuite : public testing::TestWithParam<std::tuple<double, std::string>>
+class CalculatorSuite : public testing::TestWithParam<std::tuple<double, std::string>>
 {
 protected:
-    PNCalculator m_sut{};
+    Calculator m_sut{};
 };
 
-TEST_P(PNCalculatorSuite, test_expr_result) {
+TEST_P(CalculatorSuite, test_expr_result) {
   auto output = std::get<0>(GetParam());
   auto input  = std::get<1>(GetParam());
-  EXPECT_EQ(output, m_sut.getExprResult(input));
+  EXPECT_EQ(output, m_sut.calculate(input));
 }
 
 INSTANTIATE_TEST_SUITE_P(
     TwoOperandsOneOperator,
-    PNCalculatorSuite,
+    CalculatorSuite,
     testing::Values(
       std::make_tuple(3, "+ 1 2"),
       std::make_tuple(2, "- 9 7"),
@@ -24,7 +24,7 @@ INSTANTIATE_TEST_SUITE_P(
 
 INSTANTIATE_TEST_SUITE_P(
     ThreeOperandsTwoOperators,
-    PNCalculatorSuite,
+    CalculatorSuite,
     testing::Values(
       std::make_tuple(10, "+ + 2 3 5"),
       std::make_tuple(1, "/ + 2 3 5"),
@@ -33,19 +33,19 @@ INSTANTIATE_TEST_SUITE_P(
 
 INSTANTIATE_TEST_SUITE_P(
     ComplexExpression,
-    PNCalculatorSuite,
+    CalculatorSuite,
     testing::Values(
       std::make_tuple(1, "/ * + 2 3 / + 7 1 4 10"),
       std::make_tuple(10, "/ * + 2 3 / + 7 1 4 1")));
 
-TEST_F(PNCalculatorSuite, char_not_valid)
+TEST_F(CalculatorSuite, char_not_valid)
 {
     std::string invalidExpr = "/ * + 2 3 / + : 1 4 10";
     std::string errorMsg = "Expression " + invalidExpr + " not valid! Invalid char.";
     EXPECT_THROW({
             try
             {
-                m_sut.getExprResult(invalidExpr);
+                m_sut.calculate(invalidExpr);
             }
             catch (const std::invalid_argument& e)
             {
@@ -55,14 +55,14 @@ TEST_F(PNCalculatorSuite, char_not_valid)
         }, std::invalid_argument);
 }
 
-TEST_F(PNCalculatorSuite, too_many_operators)
+TEST_F(CalculatorSuite, too_many_operators)
 {
     std::string invalidExpr = "/ * + 2 / 3 / / 1 4 10";
-    std::string errorMsg = "Expression " + invalidExpr + " not valid!";
+    std::string errorMsg = "Expression " + invalidExpr + " not valid! Stack error.";
     EXPECT_THROW({
             try
             {
-                m_sut.getExprResult(invalidExpr);
+                m_sut.calculate(invalidExpr);
             }
             catch (const std::invalid_argument& e)
             {
@@ -72,14 +72,14 @@ TEST_F(PNCalculatorSuite, too_many_operators)
         }, std::invalid_argument);
 }
 
-TEST_F(PNCalculatorSuite, too_many_operands)
+TEST_F(CalculatorSuite, too_many_operands)
 {
     std::string invalidExpr = "/ * + 2 3 1 4 10";
-    std::string errorMsg = "Expression " + invalidExpr + " not valid!";
+    std::string errorMsg = "Expression " + invalidExpr + " not valid! Result error.";
     EXPECT_THROW({
             try
             {
-                m_sut.getExprResult(invalidExpr);
+                m_sut.calculate(invalidExpr);
             }
             catch (const std::invalid_argument& e)
             {

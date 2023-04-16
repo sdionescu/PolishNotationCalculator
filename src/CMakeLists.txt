@@ -1,5 +1,5 @@
-add_library(pncalculator STATIC PNCalculator.cpp)
-target_include_directories(pncalculator PUBLIC .)
+add_library(calculator STATIC Calculator.cpp StackMachine.cpp)
+target_include_directories(calculator PUBLIC .)
 
 add_executable(main main.cpp)
-target_link_libraries(main PRIVATE pncalculator)
+target_link_libraries(main PRIVATE calculator)

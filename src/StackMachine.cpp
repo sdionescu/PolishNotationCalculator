@@ -1,10 +1,10 @@
 #include <regex>
 #include "StackMachine.hpp"
 
-constexpr char OPER_ADD      = '+';
-constexpr char OPER_SUBTRACT = '-';
-constexpr char OPER_MULTIPLY = '*';
-constexpr char OPER_DIVIDE   = '/';
+constexpr StackMachine::Operator OPER_ADD      = '+';
+constexpr StackMachine::Operator OPER_SUBTRACT = '-';
+constexpr StackMachine::Operator OPER_MULTIPLY = '*';
+constexpr StackMachine::Operator OPER_DIVIDE   = '/';
 
 // PN stack should contain at least two
 // operands in order to perform an opeartion
@@ -18,7 +18,11 @@ StackMachine::ErrorString StackMachine::execute(const std::string& entry)
 	auto isOperand  = [](const std::string& token) {
         return std::regex_match(token, std::regex("^(-?)(0|([1-9][0-9]*))(\\.[0-9]+)?$")); };
 	auto isOperator = [](const std::string& token) { 
-        return token.size() == 1 && (token[0] == OPER_ADD || token[0] == OPER_SUBTRACT || token[0] == OPER_MULTIPLY || token[0] == OPER_DIVIDE); };
+        return token.size() == 1 &&
+                (token[0] == OPER_ADD ||
+                 token[0] == OPER_SUBTRACT ||
+                 token[0] == OPER_MULTIPLY ||
+                 token[0] == OPER_DIVIDE); };
 
     if (isOperand(entry))
     {

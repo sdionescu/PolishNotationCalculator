@@ -6,6 +6,13 @@ constexpr char OPER_SUBTRACT = '-';
 constexpr char OPER_MULTIPLY = '*';
 constexpr char OPER_DIVIDE   = '/';
 
+// PN stack should contain at least two
+// operands in order to perform an opeartion
+constexpr int MIN_STACK_SIZE_VALID_OPERATION = 2;
+// PN stack should have at the end of the execution
+// just one entry representing the result of the PN
+constexpr int STACK_SIZE_VALID_RESULT = 1;
+
 StackMachine::ErrorString StackMachine::execute(const std::string& entry)
 {
 	auto isOperand  = [](const std::string& token) {
@@ -19,8 +26,7 @@ StackMachine::ErrorString StackMachine::execute(const std::string& entry)
     }
     else if (isOperator(entry))
     {
-        // at least two operands are required
-        if (m_stack.size() < 2)
+        if (m_stack.size() < MIN_STACK_SIZE_VALID_OPERATION)
         {
             return "Stack error.";
         }
@@ -68,7 +74,7 @@ StackMachine::Operand StackMachine::getOperResult(Operator operation, Operand lh
 
 StackMachine::Result StackMachine::result() const
 {
-	if (m_stack.size() == 1)
+	if (m_stack.size() == STACK_SIZE_VALID_RESULT)
     {
         return m_stack.top();
     }

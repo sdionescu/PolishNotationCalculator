@@ -38,8 +38,9 @@ INSTANTIATE_TEST_SUITE_P(
       std::make_tuple(1, "/ * + 2 3 / + 7 1 4 10"),
       std::make_tuple(10, "/ * + 2 3 / + 7 1 4 1")));
 
-TEST_F(CalculatorSuite, char_not_valid)
+TEST_F(CalculatorSuite, char_not_valid_error)
 {
+    // only + - * / are valid operands
     std::string invalidExpr = "/ * + 2 3 / + : 1 4 10";
     std::string errorMsg = "Expression " + invalidExpr + " not valid! Invalid char.";
     EXPECT_THROW({
@@ -53,9 +54,24 @@ TEST_F(CalculatorSuite, char_not_valid)
                 throw;
             }
         }, std::invalid_argument);
+
+    // duplicated operand is not allowed e.g. //
+    invalidExpr = "/ * + 2 3 // + 7 1 4 1";
+    errorMsg = "Expression " + invalidExpr + " not valid! Invalid char.";
+    EXPECT_THROW({
+            try
+            {
+                m_sut.calculate(invalidExpr);
+            }
+            catch (const std::invalid_argument& e)
+            {
+                EXPECT_EQ(errorMsg, e.what());
+                throw;
+            }
+        }, std::invalid_argument);
 }
 
-TEST_F(CalculatorSuite, too_many_operators)
+TEST_F(CalculatorSuite, too_many_operators_error)
 {
     std::string invalidExpr = "/ * + 2 / 3 / / 1 4 10";
     std::string errorMsg = "Expression " + invalidExpr + " not valid! Stack error.";
@@ -72,10 +88,27 @@ TEST_F(CalculatorSuite, too_many_operators)
         }, std::invalid_argument);
 }
 
-TEST_F(CalculatorSuite, too_many_operands)
+TEST_F(CalculatorSuite, too_many_operands_error)
 {
     std::string invalidExpr = "/ * + 2 3 1 4 10";
     std::string errorMsg = "Expression " + invalidExpr + " not valid! Result error.";
+    EXPECT_THROW({
+            try
+            {
+                m_sut.calculate(invalidExpr);
+            }
+            catch (const std::invalid_argument& e)
+            {
+                EXPECT_EQ(errorMsg, e.what());
+                throw;
+            }
+        }, std::invalid_argument);
+}
+
+TEST_F(CalculatorSuite, divide_by_zero_error)
+{
+    std::string invalidExpr = "/ * + 2 3 / + 7 1 4 0";
+    std::string errorMsg = "Expression " + invalidExpr + " not valid! Divide by 0 error.";
     EXPECT_THROW({
             try
             {

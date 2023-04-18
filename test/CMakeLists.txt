@@ -8,7 +8,7 @@ FetchContent_Declare(
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
-add_executable(unit_tests TestCalculator.cpp)
+add_executable(unit_tests TestCalculator.cpp TestCalculatorErrors.cpp)
 
 target_link_libraries(unit_tests PRIVATE calculator gtest_main gmock)
 include(GoogleTest)

@@ -3,12 +3,14 @@
 #include <sstream>
 #include "Calculator.hpp"
 
+constexpr char DELIMITER = ' ';
+
 Calculator::Result Calculator::calculate(const std::string& expression) const
 {
     StackMachine stackMachine;
     StackMachine::ErrorString error{};
 
-    auto tokens = tokenize(expression, ' ');
+    auto tokens = tokenize(expression, DELIMITER);
     for (int i = tokens.size() - 1; i >= 0 && !error; i--)
     {
         error = stackMachine.execute(tokens[i]);

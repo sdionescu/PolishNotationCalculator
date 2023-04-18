@@ -1,5 +1,8 @@
 #include <iostream>
+#include <string_view>
 #include "Calculator.hpp"
+
+constexpr std::string_view STOP_CMD = "S";
 
 int main()
 {
@@ -16,7 +19,7 @@ int main()
         std::printf("\n\nPolish Notation: ");
         std::string expression{};
         std::getline(std::cin, expression);
-        if (expression == "S")
+        if (expression == STOP_CMD)
         {
             exit(0);
         }

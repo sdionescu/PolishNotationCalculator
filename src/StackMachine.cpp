@@ -6,29 +6,22 @@ constexpr StackMachine::Operator OPER_SUBTRACT = '-';
 constexpr StackMachine::Operator OPER_MULTIPLY = '*';
 constexpr StackMachine::Operator OPER_DIVIDE   = '/';
 
-// PN stack should contain at least two
-// operands in order to perform an opeartion
 constexpr int MIN_STACK_SIZE_VALID_OPERATION = 2;
-// PN stack should have at the end of the execution
-// just one entry representing the result of the PN
 constexpr int STACK_SIZE_VALID_RESULT = 1;
 
 StackMachine::ErrorString StackMachine::execute(const std::string& entry)
 {
-	auto isOperand  = [](const std::string& token) {
-        return std::regex_match(token, std::regex("^(-?)(0|([1-9][0-9]*))(\\.[0-9]+)?$")); };
-	auto isOperator = [](const std::string& token) { 
-        return token.size() == 1 &&
-                (token[0] == OPER_ADD ||
-                 token[0] == OPER_SUBTRACT ||
-                 token[0] == OPER_MULTIPLY ||
-                 token[0] == OPER_DIVIDE); };
-
-    if (isOperand(entry))
+	bool isOperand  = std::regex_match(entry, std::regex("^(-?)(0|([1-9][0-9]*))(\\.[0-9]+)?$"));
+	bool isOperator = entry.size() == 1 &&
+                        (entry[0] == OPER_ADD ||
+                         entry[0] == OPER_SUBTRACT ||
+                         entry[0] == OPER_MULTIPLY ||
+                         entry[0] == OPER_DIVIDE);
+    if (isOperand)
     {
         m_stack.push(std::stod(entry));
     }
-    else if (isOperator(entry))
+    else if (isOperator)
     {
         if (m_stack.size() < MIN_STACK_SIZE_VALID_OPERATION)
         {
@@ -37,7 +30,6 @@ StackMachine::ErrorString StackMachine::execute(const std::string& entry)
         Operand lhs = m_stack.top(); m_stack.pop();
         Operand rhs = m_stack.top(); m_stack.pop();
 
-        // divide by 0 not allowed
         if (entry[0] == '/' && rhs == 0)
         {
             return "Divide by 0 error.";

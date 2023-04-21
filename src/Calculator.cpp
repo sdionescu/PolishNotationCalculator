@@ -15,12 +15,11 @@ Calculator::Result Calculator::calculate(const std::string& expression) const
     {
         error = stackMachine.execute(tokens[i]);
     }
-    // failure occured when adding tokens to stack
     if (error)
     {
         throw std::invalid_argument("Expression " + expression + " not valid! " + *error);
     }
-    // failure occured when getting the stack result
+
     auto result = stackMachine.result();
     if (!result)
     {

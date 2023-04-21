@@ -9,8 +9,8 @@ protected:
 
 TEST_P(CalculatorErrorSuite, test_error) {
     auto invalidExpr = std::get<0>(GetParam());
-    auto error = std::get<1>(GetParam());
-    auto errorMsg = "Expression " + invalidExpr + " not valid! " + error;
+    auto error       = std::get<1>(GetParam());
+    auto errorMsg    = "Expression " + invalidExpr + " not valid! " + error;
 
     EXPECT_THROW({
             try
@@ -29,8 +29,7 @@ INSTANTIATE_TEST_SUITE_P(
     TestErrorCases,
     CalculatorErrorSuite,
     testing::Values(
-      std::make_tuple("/ * + 2 3 / + : 1 4 10", "Invalid char."),      // only + - * / are valid operands
-      std::make_tuple("/ * + 2 3 // + 7 1 4 1", "Invalid char."),      // duplicated operand is not allowed e.g. //
-      std::make_tuple("/ * + 2 / 3 / / 1 4 10", "Stack error."),       // too many operators
-      std::make_tuple("/ * + 2 3 / + 7 1 4 0" , "Divide by 0 error.")  // too many operands
-      ));
+        std::make_tuple("/ * + 2 3 / + : 1 4 10", "Invalid char."),
+        std::make_tuple("/ * + 2 3 // + 7 1 4 1", "Invalid char."),
+        std::make_tuple("/ * + 2 / 3 / / 1 4 10", "Stack error."),
+        std::make_tuple("/ * + 2 3 / + 7 1 4 0" , "Divide by 0 error.")));

@@ -42,7 +42,7 @@ private:
      *
      * @return     The result of the operation.
      */
-    Operand getOperResult(const Operator oper, const Operand lhs, const Operand rhs) const;
+    Operand getOperationResult(const Operator oper, const Operand lhs, const Operand rhs) const;
 
 private:
     std::stack<Operand> m_stack;
